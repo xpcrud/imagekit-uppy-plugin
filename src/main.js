@@ -351,6 +351,9 @@ class ImageKitUppyPlugin extends Plugin {
             this.uppy.log(`uploading ${current} of ${total}`);
             var formData = new FormData();
             const metaFields = Object.keys(file.meta);
+            if (!formData.get("fileName") || !formData.get("fileName").trim()) {
+                formData.set("fileName", file.name);
+            }
             metaFields.map(key => {
                 if (key === "name") {
                     formData.append("fileName", file.meta.name.toString());
@@ -367,9 +370,7 @@ class ImageKitUppyPlugin extends Plugin {
                     formData.append(key, value.toString()); // Always pass value as string
                 }
             });
-            if (!formData.get("fileName") || !formData.get("fileName").trim()) {
-                formData.set("fileName", file.name);
-            }
+            
             formData.append("publicKey", this.opts.publicKey);
             formData.append("file", file.data);
 
